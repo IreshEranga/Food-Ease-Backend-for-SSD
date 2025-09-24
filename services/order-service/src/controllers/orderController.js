@@ -44,6 +44,16 @@ const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    if (req.user.roleID === 'role3' && order.userId.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    if (req.user.roleID === 'role2') {
+      const ownsRestaurant = await Restaurant.exists({ _id: order.restaurantId, owner: req.user.id });
+      if (!ownsRestaurant) return res.status(403).json({ error: 'Access denied' });
+    }
+
     res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ error: 'Error fetching order', message: err.message });
@@ -53,10 +63,10 @@ const getOrderById = async (req, res) => {
 const updateOrderPaymentStatus = async (req, res) => {
   try {
     let { status, paymentStatus } = req.body;
-    
-    if (typeof paymentStatus === 'number') {
-      if (paymentStatus === 2) paymentStatus = 'Paid';
-      else paymentStatus = 'Unpaid';
+
+    const validStatuses = ['Paid', 'Unpaid'];
+    if (!validStatuses.includes(paymentStatus)) {
+      return res.status(400).json({ error: 'Invalid payment status' });
     }
 
     const order = await Order.findByIdAndUpdate(
@@ -64,12 +74,14 @@ const updateOrderPaymentStatus = async (req, res) => {
       { orderStatus: status, paymentStatus },
       { new: true }
     );
+
     if (!order) return res.status(404).json({ error: 'Order not found' });
     res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ error: 'Error updating order', message: err.message });
   }
 };
+
 
 const getTotalOrderCount = async (req, res) => {
   try {
