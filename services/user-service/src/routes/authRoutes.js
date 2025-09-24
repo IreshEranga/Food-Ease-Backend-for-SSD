@@ -15,6 +15,8 @@
 
 
 const express = require("express");
+const passport = require("passport");
+
 const { 
   adminSignup, 
   ownerSignup, 
@@ -22,7 +24,8 @@ const {
   login, 
   forgotPassword, 
   resetPassword, 
-  riderSignup 
+  riderSignup,
+  googleLoginCallback 
 } = require("../controllers/authController");
 
 const {
@@ -80,6 +83,23 @@ router.post('/forgot-password',
 router.post('/reset-password', 
   resetPasswordValidation, 
   resetPassword
+);
+
+// Google OAuth routes
+router.get('/google', 
+  passport.authenticate('google', { 
+    scope: ['profile', 'email'],
+    session: false, // Disable session for JWT-based auth,
+    successRedirect: `${process.env.FRONTEND_URL}/customer`,
+  })
+);
+
+router.get('/google/callback', 
+  passport.authenticate('google', { 
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`
+  }), 
+  googleLoginCallback
 );
 
 module.exports = router;
