@@ -1493,6 +1493,7 @@ exports.googleLoginCallback = async (req, res) => {
 
     // Redirect to frontend with token and user info
     const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(responseUser))}`;
+     //const redirectUrl = `${process.env.FRONTEND_URL}/customer`;
     res.redirect(redirectUrl);
   } catch (error) {
     console.error("Google login callback error:", error);

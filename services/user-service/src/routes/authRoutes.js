@@ -90,7 +90,7 @@ router.get('/google',
   passport.authenticate('google', { 
     scope: ['profile', 'email'],
     session: false, // Disable session for JWT-based auth,
-    successRedirect: `${process.env.FRONTEND_URL}/customer`,
+
   })
 );
 
