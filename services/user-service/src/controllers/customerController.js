@@ -67,6 +67,11 @@ exports.getCustomers = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const customer = await Customer.findOne({ _id: req.user.userID }).select('-password');
+    
+    const userId = req.user.userID;
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ success: false, message: "Invalid user id" });
+    }
 
     if (!customer) {
       return res.status(404).json({ success: false, message: "Customer not found" });
