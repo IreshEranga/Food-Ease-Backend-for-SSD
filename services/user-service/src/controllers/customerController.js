@@ -85,9 +85,14 @@ exports.getProfile = async (req, res) => {
 // Update customer profile
 exports.updateCustomerProfile = async (req, res) => {
   try {
-    const userId = req.user.userID; // ✅ changed from req.user._id
+    const userId = req.user.userID; 
     const { name, mobileNumber, address } = req.body;
 
+    // Ensure the user is updating their own profile
+    if (userId !== req.user.userID) {
+      return res.status(403).json({ message: 'Unauthorized: You can only update your own profile' });
+    }
+    
     const customer = await Customer.findById(userId);
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });

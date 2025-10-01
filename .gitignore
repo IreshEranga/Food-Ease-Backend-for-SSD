@@ -1,0 +1,6 @@
+/api-gateway/node_modules
+/services/delivery-service/node_modules
+/services/order-service/node_modules
+/services/payment-service/node_modules
+/services/restaurant-service/node_modules
+/services/user-service/node_modules
