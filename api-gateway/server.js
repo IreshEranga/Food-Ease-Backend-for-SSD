@@ -27,6 +27,7 @@ app.use(
     credentials: true, // only if you must send cookies
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    
   })
 );
 app.use(express.json());
