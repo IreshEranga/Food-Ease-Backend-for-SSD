@@ -70,7 +70,7 @@ exports.getProfile = async (req, res) => {
     
     const userId = req.user.userID;
     if (!isValidObjectId(userId)) {
-      return res.status(400).json({ success: false, message: "Invalid user id" });
+      return res.status(400).json({ success: false, message: "Invalid token" });
     }
 
     if (!customer) {
